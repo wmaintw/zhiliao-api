@@ -1,13 +1,13 @@
 package com.zhiliao.api.zhiliaoapi.httpObjects;
 
-public class LoginRequest {
+public class AuthRequest {
     private String mobile;
     private String password;
 
-    public LoginRequest() {
+    public AuthRequest() {
     }
 
-    public LoginRequest(String mobile, String password) {
+    public AuthRequest(String mobile, String password) {
         this.mobile = mobile;
         this.password = password;
     }
@@ -30,7 +30,7 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return "LoginRequest{" +
+        return "AuthRequest{" +
                 "mobile='" + mobile + '\'' +
                 '}';
     }

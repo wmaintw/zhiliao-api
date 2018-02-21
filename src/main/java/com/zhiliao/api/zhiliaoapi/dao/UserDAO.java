@@ -2,11 +2,14 @@ package com.zhiliao.api.zhiliaoapi.dao;
 
 import com.zhiliao.api.zhiliaoapi.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -25,10 +28,26 @@ public class UserDAO {
     public UserDAO() {
     }
 
-    public Optional<User> findUser(String mobile, String encryptedPassword) {
+    public Optional<User> findUser(String mobile, String hashedPassword) {
         List<User> users = jdbcTemplate.query("select * from users where mobile = ? and password = ?",
-                new Object[]{mobile, encryptedPassword}, getUserMapper());
+                new Object[]{mobile, hashedPassword}, getUserMapper());
         return isFindTargetUser(users) ? of(users.get(0)) : ofNullable(null);
+    }
+
+    public void create(String mobile, String hashedPassword) {
+        String insertUser = "insert into users (mobile, password) values (?, ?)";
+        jdbcTemplate.execute(insertUser, new PreparedStatementCallback<Boolean>() {
+            @Override
+            public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                ps.setString(1, mobile);
+                ps.setString(2, hashedPassword);
+                return ps.execute();
+            }
+        });
+    }
+
+    public void deleteAll() {
+        jdbcTemplate.execute("truncate table users");
     }
 
     private RowMapper<User> getUserMapper() {

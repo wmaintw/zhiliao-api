@@ -1,7 +1,7 @@
 package com.zhiliao.api.zhiliaoapi.controllers;
 
 import com.zhiliao.api.zhiliaoapi.httpObjects.AuthResponse;
-import com.zhiliao.api.zhiliaoapi.httpObjects.LoginRequest;
+import com.zhiliao.api.zhiliaoapi.httpObjects.AuthRequest;
 import com.zhiliao.api.zhiliaoapi.models.User;
 import com.zhiliao.api.zhiliaoapi.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,9 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping
-    public AuthResponse login(@RequestBody LoginRequest loginRequest) {
-        String mobile = loginRequest.getMobile();
-        String passwordInPlaintext = loginRequest.getPassword();
+    public AuthResponse login(@RequestBody AuthRequest authRequest) {
+        String mobile = authRequest.getMobile();
+        String passwordInPlaintext = authRequest.getPassword();
 
         Optional<User> user = authService.login(mobile, passwordInPlaintext);
 
