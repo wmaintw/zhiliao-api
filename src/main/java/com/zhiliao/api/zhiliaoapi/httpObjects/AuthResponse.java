@@ -1,28 +1,12 @@
 package com.zhiliao.api.zhiliaoapi.httpObjects;
 
 public class AuthResponse {
-    private boolean loggedIn = false;
-    private String token;
-    private String name;
     private Integer id;
     private String mobile;
+    private String token;
+    private String name;
 
     public AuthResponse() {
-    }
-
-    public AuthResponse(boolean loggedIn, String token, String name, Integer id) {
-        this.loggedIn = loggedIn;
-        this.token = token;
-        this.name = name;
-        this.id = id;
-    }
-
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
-
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
     }
 
     public String getToken() {
@@ -53,17 +37,16 @@ public class AuthResponse {
         return mobile;
     }
 
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
     @Override
     public String toString() {
         return "AuthResponse{" +
-                "loggedIn=" + loggedIn +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", id=" + id +
                 ", mobile='" + mobile + '\'' +
                 '}';
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 }

@@ -28,9 +28,15 @@ public class UserDAO {
     public UserDAO() {
     }
 
-    public Optional<User> findUser(String mobile, String hashedPassword) {
+    public Optional<User> findOne(String mobile, String hashedPassword) {
         List<User> users = jdbcTemplate.query("select * from users where mobile = ? and password = ?",
                 new Object[]{mobile, hashedPassword}, getUserMapper());
+        return isFindTargetUser(users) ? of(users.get(0)) : ofNullable(null);
+    }
+
+    public Optional<User> findOne(String mobile) {
+        List<User> users = jdbcTemplate.query("select * from users where mobile = ?",
+                new Object[]{mobile}, getUserMapper());
         return isFindTargetUser(users) ? of(users.get(0)) : ofNullable(null);
     }
 
