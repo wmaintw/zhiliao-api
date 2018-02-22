@@ -1,6 +1,6 @@
-package com.zhiliao.api.zhiliaoapi.controllers;
+package com.zhiliao.api.zhiliaoapi.intg.controllers;
 
-import com.zhiliao.api.zhiliaoapi.common.ControllerTestBase;
+import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
 import com.zhiliao.api.zhiliaoapi.dao.UserDAO;
 import com.zhiliao.api.zhiliaoapi.httpObjects.*;
 import com.zhiliao.api.zhiliaoapi.models.User;
@@ -51,7 +51,7 @@ public class AuthControllerTest extends ControllerTestBase {
     public void shouldLoginFailedGivenWrongMobile() throws Exception {
         createUser();
 
-        AuthRequest authRequest = new AuthRequest("wrong mobile", PASSWORD);
+        AuthRequest authRequest = new AuthRequest("99988887777", PASSWORD);
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
 
         assertThat(error.getStatusCode(), is(OK));

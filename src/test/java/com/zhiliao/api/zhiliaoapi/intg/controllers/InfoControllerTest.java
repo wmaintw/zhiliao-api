@@ -1,6 +1,6 @@
-package com.zhiliao.api.zhiliaoapi.controllers;
+package com.zhiliao.api.zhiliaoapi.intg.controllers;
 
-import com.zhiliao.api.zhiliaoapi.common.ControllerTestBase;
+import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
 import com.zhiliao.api.zhiliaoapi.httpObjects.InfoResponse;
 import org.junit.Test;
 

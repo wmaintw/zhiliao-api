@@ -1,4 +1,4 @@
-package com.zhiliao.api.zhiliaoapi.controllers;
+package com.zhiliao.api.zhiliaoapi.intg.controllers;
 
 import com.zhiliao.api.zhiliaoapi.httpObjects.InfoResponse;
 import org.joda.time.DateTime;
