@@ -1,4 +1,4 @@
-package com.zhiliao.api.zhiliaoapi.unit.services;
+package com.zhiliao.api.zhiliaoapi.services;
 
 import com.zhiliao.api.zhiliaoapi.dao.UserDAO;
 import com.zhiliao.api.zhiliaoapi.exceptions.LoginFailedException;

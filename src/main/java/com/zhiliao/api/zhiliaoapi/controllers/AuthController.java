@@ -7,7 +7,7 @@ import com.zhiliao.api.zhiliaoapi.httpObjects.AuthResponse;
 import com.zhiliao.api.zhiliaoapi.httpObjects.RegisterRequest;
 import com.zhiliao.api.zhiliaoapi.httpObjects.RegisterResponse;
 import com.zhiliao.api.zhiliaoapi.models.User;
-import com.zhiliao.api.zhiliaoapi.unit.services.AuthService;
+import com.zhiliao.api.zhiliaoapi.services.AuthService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
