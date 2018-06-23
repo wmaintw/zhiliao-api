@@ -1,4 +1,4 @@
-package com.zhiliao.api.zhiliaoapi.intg.controllers;
+package com.zhiliao.api.zhiliaoapi.controllers;
 
 import com.zhiliao.api.zhiliaoapi.exceptions.LoginFailedException;
 import com.zhiliao.api.zhiliaoapi.exceptions.RegisterFailedException;

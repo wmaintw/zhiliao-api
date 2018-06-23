@@ -1,4 +1,4 @@
-package com.zhiliao.api.zhiliaoapi.intg.controllers;
+package com.zhiliao.api.zhiliaoapi.controllers;
 
 import com.zhiliao.api.zhiliaoapi.exceptions.BadParametersException;
 import com.zhiliao.api.zhiliaoapi.exceptions.RegisterFailedException;

@@ -2,7 +2,7 @@ package com.zhiliao.api.zhiliaoapi.unit.controllers;
 
 import com.zhiliao.api.zhiliaoapi.exceptions.BadParametersException;
 import com.zhiliao.api.zhiliaoapi.httpObjects.AuthRequest;
-import com.zhiliao.api.zhiliaoapi.intg.controllers.AuthController;
+import com.zhiliao.api.zhiliaoapi.controllers.AuthController;
 import org.junit.Test;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
