@@ -4,6 +4,7 @@ import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
 import com.zhiliao.api.zhiliaoapi.dao.UserDAO;
 import com.zhiliao.api.zhiliaoapi.httpObjects.*;
 import com.zhiliao.api.zhiliaoapi.models.User;
+import com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode;
 import com.zhiliao.api.zhiliaoapi.utils.SecurityHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
+import static com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode.LOGIN_FAILED;
+import static com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode.REGISTER_FAILED;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpStatus.OK;
@@ -55,7 +58,7 @@ public class AuthControllerTest extends ControllerTestBase {
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
 
         assertThat(error.getStatusCode(), is(OK));
-        assertThat(error.getBody().getCode(), is(101));
+        assertThat(error.getBody().getCode(), is(LOGIN_FAILED));
         assertThat(error.getBody().getMessage(), is("Invalid credential."));
     }
 
@@ -67,7 +70,7 @@ public class AuthControllerTest extends ControllerTestBase {
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
 
         assertThat(error.getStatusCode(), is(OK));
-        assertThat(error.getBody().getCode(), is(101));
+        assertThat(error.getBody().getCode(), is(LOGIN_FAILED));
         assertThat(error.getBody().getMessage(), is("Invalid credential."));
     }
 
@@ -101,7 +104,7 @@ public class AuthControllerTest extends ControllerTestBase {
                 restTemplate.postForEntity(REGISTER_URL, registerRequest, CustomizedError.class);
 
         assertThat(error.getStatusCode(), is(OK));
-        assertThat(error.getBody().getCode(), is(100));
+        assertThat(error.getBody().getCode(), is(REGISTER_FAILED));
         assertThat(error.getBody().getMessage(), is("user already registered."));
     }
 
