@@ -2,13 +2,13 @@ package com.zhiliao.api.zhiliaoapi.intg.controllers;
 
 
 import com.zhiliao.api.zhiliaoapi.controllers.VisitorController;
-import com.zhiliao.api.zhiliaoapi.dao.UserDAO;
+import com.zhiliao.api.zhiliaoapi.dao.ConsultantDAO;
 import com.zhiliao.api.zhiliaoapi.dao.VisitorDAO;
 import com.zhiliao.api.zhiliaoapi.httpObjects.CustomizedError;
 import com.zhiliao.api.zhiliaoapi.httpObjects.visitor.CreateVisitorRequest;
 import com.zhiliao.api.zhiliaoapi.httpObjects.visitor.CreateVisitorResponse;
 import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
-import com.zhiliao.api.zhiliaoapi.models.User;
+import com.zhiliao.api.zhiliaoapi.models.Consultant;
 import com.zhiliao.api.zhiliaoapi.models.Visitor;
 import com.zhiliao.api.zhiliaoapi.utils.RedisHelper;
 import com.zhiliao.api.zhiliaoapi.utils.SecurityHelper;
@@ -42,7 +42,7 @@ public class VisitorControllerTest extends ControllerTestBase {
     private VisitorDAO visitorDAO;
 
     @Autowired
-    private UserDAO userDAO;
+    private ConsultantDAO consultantDAO;
 
     @Autowired
     private SecurityHelper securityHelper;
@@ -53,7 +53,7 @@ public class VisitorControllerTest extends ControllerTestBase {
     @Before
     public void setUp() throws Exception {
         visitorDAO.deleteAll();
-        userDAO.deleteAll();
+        consultantDAO.deleteAll();
 
         controller = new VisitorController();
     }
@@ -105,8 +105,8 @@ public class VisitorControllerTest extends ControllerTestBase {
     @Test
     public void shouldReturnAllMyVisitors() throws Exception {
         String mobileOfConsultantA = "13500000001";
-        User consultantA = createConsultant(mobileOfConsultantA);
-        User consultantB = createConsultant("13500000002");
+        Consultant consultantA = createConsultant(mobileOfConsultantA);
+        Consultant consultantB = createConsultant("13500000002");
 
         Visitor visitor1 = createVisitor("小明", "13900001111", consultantA.getId());
         Visitor visitor2 = createVisitor("小张", "13900002222", consultantA.getId());
@@ -127,9 +127,9 @@ public class VisitorControllerTest extends ControllerTestBase {
         assertThat(visitorIds, hasItems(visitor1.getId(), visitor2.getId()));
     }
 
-    private User createConsultant(String consultMobile) {
-        userDAO.create(consultMobile, "lsjdfl");
-        return userDAO.findOne(consultMobile).get();
+    private Consultant createConsultant(String consultMobile) {
+        consultantDAO.create(consultMobile, "lsjdfl");
+        return consultantDAO.findOne(consultMobile).get();
     }
 
     private Visitor createVisitor(String name, String mobile) {

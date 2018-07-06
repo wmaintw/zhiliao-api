@@ -24,6 +24,7 @@ public class VisitorServiceTest {
 
     private VisitorService visitorService;
     private VisitorDAO visitorDAO;
+    private final int consultantId = 100;
 
     @Before
     public void setUp() throws Exception {
@@ -81,25 +82,22 @@ public class VisitorServiceTest {
 
     @Test
     public void shouldReturnAllTheVisitors() throws Exception {
-        int userId = 100;
-
         List<Visitor> mockedVisitors = new ArrayList<>();
         mockedVisitors.add(buildVisitor(200, "小明", "13900001111"));
         mockedVisitors.add(buildVisitor(300, "小张", "13900002222"));
 
-        when(visitorDAO.findByConsultantId(userId)).thenReturn(mockedVisitors);
+        when(visitorDAO.findByConsultantId(consultantId)).thenReturn(mockedVisitors);
 
-        List<Visitor> myVisitors = visitorService.findMyVisitors(userId);
+        List<Visitor> myVisitors = visitorService.findMyVisitors(consultantId);
 
         assertThat(myVisitors.size(), is((2)));
     }
 
     @Test
     public void shouldReturnEmptyListGivenNoVisitorFound() throws Exception {
-        int userId = 100;
-        when(visitorDAO.findByConsultantId(userId)).thenReturn(new ArrayList<>());
+        when(visitorDAO.findByConsultantId(consultantId)).thenReturn(new ArrayList<>());
 
-        List<Visitor> myVisitors = visitorService.findMyVisitors(userId);
+        List<Visitor> myVisitors = visitorService.findMyVisitors(consultantId);
 
         assertThat(myVisitors.size(), is(0));
     }

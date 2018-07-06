@@ -14,7 +14,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ public class VisitorDAO {
         String findVisitor = "select * from visitors where id = ?";
         List<Visitor> visitors = jdbcTemplate.query(findVisitor,
                 new Object[]{id}, findVisitorMapper());
-        return isFindTargetUser(visitors) ? of(visitors.get(0)) : empty();
+        return isFindTargetVisitor(visitors) ? of(visitors.get(0)) : empty();
     }
 
     public List<Visitor> findByConsultantId(int consultantId) {
@@ -45,7 +44,7 @@ public class VisitorDAO {
         String findVisitor = "select * from visitors where real_name like ? and mobile = ?";
         List<Visitor> visitors = jdbcTemplate.query(findVisitor,
                 new Object[]{name, mobile}, findVisitorMapper());
-        return isFindTargetUser(visitors) ? of(visitors.get(0)) : empty();
+        return isFindTargetVisitor(visitors) ? of(visitors.get(0)) : empty();
     }
 
     public void create(CreateVisitorRequest visitor) {
@@ -76,7 +75,7 @@ public class VisitorDAO {
         });
     }
 
-    private boolean isFindTargetUser(List<Visitor> visitors) {
+    private boolean isFindTargetVisitor(List<Visitor> visitors) {
         return visitors.size() == 1;
     }
 

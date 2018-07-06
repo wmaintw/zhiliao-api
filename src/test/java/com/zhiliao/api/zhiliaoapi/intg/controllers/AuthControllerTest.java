@@ -1,10 +1,9 @@
 package com.zhiliao.api.zhiliaoapi.intg.controllers;
 
 import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
-import com.zhiliao.api.zhiliaoapi.dao.UserDAO;
+import com.zhiliao.api.zhiliaoapi.dao.ConsultantDAO;
 import com.zhiliao.api.zhiliaoapi.httpObjects.*;
-import com.zhiliao.api.zhiliaoapi.models.User;
-import com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode;
+import com.zhiliao.api.zhiliaoapi.models.Consultant;
 import com.zhiliao.api.zhiliaoapi.utils.SecurityHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class AuthControllerTest extends ControllerTestBase {
     @Autowired
-    private UserDAO userDAO;
+    private ConsultantDAO consultantDAO;
 
     private final String AUTH_URL = "/auth";
     private final String REGISTER_URL = "/auth/register";
@@ -31,12 +30,12 @@ public class AuthControllerTest extends ControllerTestBase {
 
     @Before
     public void setUp() throws Exception {
-        userDAO.deleteAll();
+        consultantDAO.deleteAll();
     }
 
     @Test
     public void shouldLoginSuccessfully() throws Exception {
-        createUser();
+        createConsultant();
 
         AuthRequest authRequest = new AuthRequest();
         authRequest.setMobile(MOBILE);
@@ -52,7 +51,7 @@ public class AuthControllerTest extends ControllerTestBase {
 
     @Test
     public void shouldLoginFailedGivenWrongMobile() throws Exception {
-        createUser();
+        createConsultant();
 
         AuthRequest authRequest = new AuthRequest("99988887777", PASSWORD);
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
@@ -64,7 +63,7 @@ public class AuthControllerTest extends ControllerTestBase {
 
     @Test
     public void shouldLoginFailedGivenWrongPassword() throws Exception {
-        createUser();
+        createConsultant();
 
         AuthRequest authRequest = new AuthRequest(MOBILE, "wrong password");
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
@@ -75,7 +74,7 @@ public class AuthControllerTest extends ControllerTestBase {
     }
 
     @Test
-    public void shouldRegisterUserSuccessfully() throws Exception {
+    public void shouldRegisterConsultantSuccessfully() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setMobile(MOBILE);
         registerRequest.setPassword(PASSWORD);
@@ -88,13 +87,13 @@ public class AuthControllerTest extends ControllerTestBase {
         assertThat(registerResponse.getBody().getMobile(), is(MOBILE));
         assertThat(registerResponse.getBody().getToken().length(), is(32));
 
-        Optional<User> registeredUser = userDAO.findOne(MOBILE, SecurityHelper.hash(PASSWORD));
-        assertThat(registeredUser.isPresent(), is(true));
+        Optional<Consultant> registeredConsultant = consultantDAO.findOne(MOBILE, SecurityHelper.hash(PASSWORD));
+        assertThat(registeredConsultant.isPresent(), is(true));
     }
 
     @Test
-    public void shouldRegisterUserFailedGivenMobileExists() throws Exception {
-        createUser(MOBILE, PASSWORD);
+    public void shouldRegisterConsultantFailedGivenMobileExists() throws Exception {
+        createConsultant(MOBILE, PASSWORD);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setMobile(MOBILE);
@@ -105,14 +104,14 @@ public class AuthControllerTest extends ControllerTestBase {
 
         assertThat(error.getStatusCode(), is(OK));
         assertThat(error.getBody().getCode(), is(REGISTER_FAILED));
-        assertThat(error.getBody().getMessage(), is("user already registered."));
+        assertThat(error.getBody().getMessage(), is("consultant already registered."));
     }
 
-    private void createUser() throws NoSuchAlgorithmException {
-        createUser(MOBILE, PASSWORD);
+    private void createConsultant() throws NoSuchAlgorithmException {
+        createConsultant(MOBILE, PASSWORD);
     }
 
-    private void createUser(String mobile, String password) {
-        userDAO.create(mobile, SecurityHelper.hash(password));
+    private void createConsultant(String mobile, String password) {
+        consultantDAO.create(mobile, SecurityHelper.hash(password));
     }
 }

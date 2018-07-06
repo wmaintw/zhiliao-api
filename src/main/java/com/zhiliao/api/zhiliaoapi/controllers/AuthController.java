@@ -6,7 +6,7 @@ import com.zhiliao.api.zhiliaoapi.httpObjects.AuthRequest;
 import com.zhiliao.api.zhiliaoapi.httpObjects.AuthResponse;
 import com.zhiliao.api.zhiliaoapi.httpObjects.RegisterRequest;
 import com.zhiliao.api.zhiliaoapi.httpObjects.RegisterResponse;
-import com.zhiliao.api.zhiliaoapi.models.User;
+import com.zhiliao.api.zhiliaoapi.models.Consultant;
 import com.zhiliao.api.zhiliaoapi.services.AuthService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,23 +28,23 @@ public class AuthController {
         String passwordInPlaintext = authRequest.getPassword();
         validateInput(mobile, passwordInPlaintext);
 
-        User user = authService.login(mobile, passwordInPlaintext);
+        Consultant consultant = authService.login(mobile, passwordInPlaintext);
 
         AuthResponse authResponse = new AuthResponse();
-        authResponse.setId(user.getId());
-        authResponse.setName(user.getName());
-        authResponse.setMobile(user.getMobile());
+        authResponse.setId(consultant.getId());
+        authResponse.setName(consultant.getName());
+        authResponse.setMobile(consultant.getMobile());
         authResponse.setToken(authService.generateToken());
         return authResponse;
     }
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest registerRequest) throws RegisterFailedException {
-        User userRegistered = authService.register(registerRequest.getMobile(), registerRequest.getPassword());
+        Consultant consultantRegistered = authService.register(registerRequest.getMobile(), registerRequest.getPassword());
 
         RegisterResponse registerResponse = new RegisterResponse();
-        registerResponse.setId(userRegistered.getId());
-        registerResponse.setMobile(userRegistered.getMobile());
+        registerResponse.setId(consultantRegistered.getId());
+        registerResponse.setMobile(consultantRegistered.getMobile());
         registerResponse.setToken(authService.generateToken());
         return registerResponse;
     }

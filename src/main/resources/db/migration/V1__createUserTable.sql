@@ -1,4 +1,4 @@
-create table users (
+create table consultants (
     id int not null auto_increment,
     mobile varchar(16) not null,
     password varchar(128) not null,

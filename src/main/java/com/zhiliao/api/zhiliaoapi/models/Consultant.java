@@ -2,16 +2,16 @@ package com.zhiliao.api.zhiliaoapi.models;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class Consultant implements Serializable {
     private Integer id;
     private String mobile;
     private String password;
     private String name;
 
-    public User() {
+    public Consultant() {
     }
 
-    public User(Integer id, String mobile, String password, String name) {
+    public Consultant(Integer id, String mobile, String password, String name) {
         this.id = id;
         this.mobile = mobile;
         this.password = password;
@@ -52,7 +52,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Consultant{" +
                 "id=" + id +
                 ", mobile='" + mobile + '\'' +
                 ", name='" + name + '\'' +
