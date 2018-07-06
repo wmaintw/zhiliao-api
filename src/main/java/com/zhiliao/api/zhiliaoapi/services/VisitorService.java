@@ -26,8 +26,8 @@ public class VisitorService {
         }
     }
 
-    public List<Visitor> findMyVisitors(int userId) {
-        List<Visitor> visitors = visitorDAO.findByConsultantId(userId);
+    public List<Visitor> findMyVisitors(int consultantId) {
+        List<Visitor> visitors = visitorDAO.findByConsultantId(consultantId);
         return visitors;
     }
 

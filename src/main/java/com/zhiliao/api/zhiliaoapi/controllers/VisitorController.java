@@ -2,14 +2,18 @@ package com.zhiliao.api.zhiliaoapi.controllers;
 
 import com.zhiliao.api.zhiliaoapi.httpObjects.visitor.CreateVisitorRequest;
 import com.zhiliao.api.zhiliaoapi.httpObjects.visitor.CreateVisitorResponse;
+import com.zhiliao.api.zhiliaoapi.models.User;
 import com.zhiliao.api.zhiliaoapi.models.Visitor;
+import com.zhiliao.api.zhiliaoapi.services.UserService;
 import com.zhiliao.api.zhiliaoapi.services.VisitorService;
+import com.zhiliao.api.zhiliaoapi.utils.RedisHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.zhiliao.api.zhiliaoapi.utils.SecurityHelper.extractToken;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -19,6 +23,12 @@ public class VisitorController {
     @Autowired
     private VisitorService visitorService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RedisHelper redisHelper;
+
     @GetMapping("/{id}")
     public ResponseEntity<Visitor> findVisitor(@PathVariable("id") int id) {
         Visitor visitor = visitorService.findVisitor(id);
@@ -26,9 +36,11 @@ public class VisitorController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Visitor>> getVisitors() {
-        int userId = 100;
-        List<Visitor> visitors = visitorService.findMyVisitors(userId);
+    public ResponseEntity<List<Visitor>> getVisitors(@RequestHeader(name = "Authorization", required = true) String bearerToken) {
+        String mobile = redisHelper.getString(extractToken(bearerToken));
+        User consultant = userService.find(mobile);
+
+        List<Visitor> visitors = visitorService.findMyVisitors(consultant.getId());
         return new ResponseEntity<List<Visitor>>(visitors, OK);
     }
 

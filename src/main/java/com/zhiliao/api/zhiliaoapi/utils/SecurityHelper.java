@@ -1,6 +1,11 @@
 package com.zhiliao.api.zhiliaoapi.utils;
 
 import com.zhiliao.api.zhiliaoapi.exceptions.ServerErrorException;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -9,9 +14,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import static java.lang.String.format;
+import static java.util.concurrent.TimeUnit.HOURS;
 
 @Component
 public class SecurityHelper {
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @Value("${app.auth.token.timeout}")
+    private long tokenTimeout;
+
     private static final String ALGORITHM_SHA_256 = "SHA-256";
 
     public static String hash(String text) {
@@ -30,5 +42,39 @@ public class SecurityHelper {
 
     public static String generateUUID() {
         return UUID.randomUUID().toString();
+    }
+
+    public static String extractToken(String bearerToken) {
+        return bearerToken.substring("Bearer ".length());
+    }
+
+    public String saveLoginStatus(String username, String token) {
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set(token, username, tokenTimeout, HOURS);
+        return token;
+    }
+
+    public boolean isAuthenticated(String username, String providedToken) {
+        if (!redisTemplate.hasKey(username)) {
+            return false;
+        }
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        String tokenInRedis = ops.get(username);
+        if (StringUtils.isBlank(tokenInRedis)) {
+            return false;
+        }
+
+        if (tokenInRedis.equals(providedToken)) {
+            refreshToken(username, tokenInRedis);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void refreshToken(String username, String token) {
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set(username, token, tokenTimeout, HOURS);
     }
 }

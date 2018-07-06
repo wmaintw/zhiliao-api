@@ -38,7 +38,7 @@ dependencies {
 			'org.springframework.boot:spring-boot-starter-web',
 			"org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}",
 			"org.springframework.boot:spring-boot-starter-security",
-//			'org.springframework.boot:spring-boot-starter-redis',
+			'org.springframework.boot:spring-boot-starter-redis:1.4.7.RELEASE',
 			'mysql:mysql-connector-java:5.1.45',
 			'org.apache.commons:commons-lang3:3.7',
 			'joda-time:joda-time:2.9.9',

@@ -9,6 +9,8 @@ import com.zhiliao.api.zhiliaoapi.services.VisitorService;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -57,7 +59,7 @@ public class VisitorServiceTest {
     @Test
     public void shouldReturnVisitorIdAfterCreated() throws Exception {
         CreateVisitorRequest visitorRequest = new CreateVisitorRequest();
-        Optional<Visitor> mockedVisitor = of(getVisitor());
+        Optional<Visitor> mockedVisitor = of(buildVisitor(100, "小明", "13900001111"));
 
         doNothing().when(visitorDAO).create(visitorRequest);
         when(visitorDAO.find(visitorRequest.getRealName(), visitorRequest.getMobile())).thenReturn(mockedVisitor);
@@ -77,11 +79,36 @@ public class VisitorServiceTest {
         visitorService.createVisitor(visitorRequest);
     }
 
-    private Visitor getVisitor() {
+    @Test
+    public void shouldReturnAllTheVisitors() throws Exception {
+        int userId = 100;
+
+        List<Visitor> mockedVisitors = new ArrayList<>();
+        mockedVisitors.add(buildVisitor(200, "小明", "13900001111"));
+        mockedVisitors.add(buildVisitor(300, "小张", "13900002222"));
+
+        when(visitorDAO.findByConsultantId(userId)).thenReturn(mockedVisitors);
+
+        List<Visitor> myVisitors = visitorService.findMyVisitors(userId);
+
+        assertThat(myVisitors.size(), is((2)));
+    }
+
+    @Test
+    public void shouldReturnEmptyListGivenNoVisitorFound() throws Exception {
+        int userId = 100;
+        when(visitorDAO.findByConsultantId(userId)).thenReturn(new ArrayList<>());
+
+        List<Visitor> myVisitors = visitorService.findMyVisitors(userId);
+
+        assertThat(myVisitors.size(), is(0));
+    }
+
+    private Visitor buildVisitor(int id, String realName, String mobile) {
         Visitor visitor = new Visitor();
-        visitor.setId(100);
-        visitor.setRealName("小明");
-        visitor.setMobile("13900001111");
+        visitor.setId(id);
+        visitor.setRealName(realName);
+        visitor.setMobile(mobile);
         return visitor;
     }
 }

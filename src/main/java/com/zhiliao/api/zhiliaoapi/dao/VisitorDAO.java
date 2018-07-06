@@ -34,8 +34,11 @@ public class VisitorDAO {
         return isFindTargetUser(visitors) ? of(visitors.get(0)) : empty();
     }
 
-    public List<Visitor> findByConsultantId(int userId) {
-        return new ArrayList<>();
+    public List<Visitor> findByConsultantId(int consultantId) {
+        String findVisitors = "select * from visitors where consultant_id = ?";
+        List<Visitor> visitors = jdbcTemplate.query(findVisitors,
+                new Object[]{consultantId}, findVisitorMapper());
+        return visitors;
     }
 
     public Optional<Visitor> find(String name, String mobile) {
@@ -60,13 +63,14 @@ public class VisitorDAO {
         });
     }
 
-    public void create(String name, String mobile) {
-        String insertVisitor = "insert into visitors (real_name, mobile) values (?, ?)";
+    public void create(String name, String mobile, int consultantId) {
+        String insertVisitor = "insert into visitors (real_name, mobile, consultant_id) values (?, ?, ?)";
         jdbcTemplate.execute(insertVisitor, new PreparedStatementCallback<Boolean>() {
             @Override
             public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
                 ps.setString(1, name);
                 ps.setString(2, mobile);
+                ps.setInt(3, consultantId);
                 return ps.execute();
             }
         });

@@ -7,6 +7,7 @@ create table visitors (
     nationality varchar(8),
     mobile varchar(32),
     address varchar(128),
+    consultant_id int,
 
     created_datetime timestamp not null default CURRENT_TIMESTAMP,
     updated_datetime timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

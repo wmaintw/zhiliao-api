@@ -11,6 +11,7 @@ public class Visitor {
     private String nationality;
     private String mobile;
     private String address;
+    private int consultantId;
 
     public Visitor() {
     }
@@ -77,5 +78,28 @@ public class Visitor {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getConsultantId() {
+        return consultantId;
+    }
+
+    public void setConsultantId(int consultantId) {
+        this.consultantId = consultantId;
+    }
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "id=" + id +
+                ", realName='" + realName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", dob=" + dob +
+                ", age=" + age +
+                ", nationality='" + nationality + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", address='" + address + '\'' +
+                ", consultantId=" + consultantId +
+                '}';
     }
 }
