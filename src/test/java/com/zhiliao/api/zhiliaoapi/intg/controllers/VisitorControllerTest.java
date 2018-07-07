@@ -8,6 +8,7 @@ import com.zhiliao.api.zhiliaoapi.httpObjects.CustomizedError;
 import com.zhiliao.api.zhiliaoapi.httpObjects.visitor.CreateVisitorRequest;
 import com.zhiliao.api.zhiliaoapi.httpObjects.visitor.CreateVisitorResponse;
 import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
+import com.zhiliao.api.zhiliaoapi.intg.common.TestDataHelper;
 import com.zhiliao.api.zhiliaoapi.models.Consultant;
 import com.zhiliao.api.zhiliaoapi.models.Visitor;
 import com.zhiliao.api.zhiliaoapi.utils.RedisHelper;
@@ -50,6 +51,9 @@ public class VisitorControllerTest extends ControllerTestBase {
     @Autowired
     private RedisHelper redisHelper;
 
+    @Autowired
+    private TestDataHelper dataHelper;
+
     @Before
     public void setUp() throws Exception {
         visitorDAO.deleteAll();
@@ -62,7 +66,7 @@ public class VisitorControllerTest extends ControllerTestBase {
     public void shouldFindSingleVisitorGivenVisitorExistsInDb() throws Exception {
         String name = "小明";
         String mobile = "13900001111";
-        Visitor visitorCreated = createVisitor(name, mobile);
+        Visitor visitorCreated = dataHelper.aVisitor(name, mobile);
 
         ResponseEntity<Visitor> visitorResponse = restTemplate.getForEntity("/visitors/" + visitorCreated.getId(), Visitor.class);
 
@@ -108,9 +112,9 @@ public class VisitorControllerTest extends ControllerTestBase {
         Consultant consultantA = createConsultant(mobileOfConsultantA);
         Consultant consultantB = createConsultant("13500000002");
 
-        Visitor visitor1 = createVisitor("小明", "13900001111", consultantA.getId());
-        Visitor visitor2 = createVisitor("小张", "13900002222", consultantA.getId());
-        createVisitor("小王", "13900002222", consultantB.getId());
+        Visitor visitor1 = dataHelper.aVisitor("小明", "13900001111", consultantA.getId());
+        Visitor visitor2 = dataHelper.aVisitor("小张", "13900002222", consultantA.getId());
+        dataHelper.aVisitor("小王", "13900002222", consultantB.getId());
 
         String tokenOfConsultantA = "test-session-token";
         redisHelper.deleteKey(tokenOfConsultantA);
@@ -130,15 +134,5 @@ public class VisitorControllerTest extends ControllerTestBase {
     private Consultant createConsultant(String consultMobile) {
         consultantDAO.create(consultMobile, "lsjdfl");
         return consultantDAO.findOne(consultMobile).get();
-    }
-
-    private Visitor createVisitor(String name, String mobile) {
-        return createVisitor(name, mobile, 100);
-    }
-
-    private Visitor createVisitor(String name, String mobile, int consultantId) {
-        visitorDAO.create(name, mobile, consultantId);
-        Optional<Visitor> visitor = visitorDAO.find(name, mobile);
-        return visitor.get();
     }
 }

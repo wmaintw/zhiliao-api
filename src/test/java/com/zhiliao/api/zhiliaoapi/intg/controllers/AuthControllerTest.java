@@ -3,6 +3,7 @@ package com.zhiliao.api.zhiliaoapi.intg.controllers;
 import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
 import com.zhiliao.api.zhiliaoapi.dao.ConsultantDAO;
 import com.zhiliao.api.zhiliaoapi.httpObjects.*;
+import com.zhiliao.api.zhiliaoapi.intg.common.TestDataHelper;
 import com.zhiliao.api.zhiliaoapi.models.Consultant;
 import com.zhiliao.api.zhiliaoapi.utils.SecurityHelper;
 import org.junit.Before;
@@ -23,6 +24,9 @@ public class AuthControllerTest extends ControllerTestBase {
     @Autowired
     private ConsultantDAO consultantDAO;
 
+    @Autowired
+    private TestDataHelper dataHelper;
+
     private final String AUTH_URL = "/auth";
     private final String REGISTER_URL = "/auth/register";
     private final String MOBILE = "13900001111";
@@ -35,7 +39,7 @@ public class AuthControllerTest extends ControllerTestBase {
 
     @Test
     public void shouldLoginSuccessfully() throws Exception {
-        createConsultant();
+        dataHelper.createConsultant(MOBILE, PASSWORD);
 
         AuthRequest authRequest = new AuthRequest();
         authRequest.setMobile(MOBILE);
@@ -51,7 +55,7 @@ public class AuthControllerTest extends ControllerTestBase {
 
     @Test
     public void shouldLoginFailedGivenWrongMobile() throws Exception {
-        createConsultant();
+        dataHelper.createConsultant(MOBILE, PASSWORD);
 
         AuthRequest authRequest = new AuthRequest("99988887777", PASSWORD);
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
@@ -63,7 +67,7 @@ public class AuthControllerTest extends ControllerTestBase {
 
     @Test
     public void shouldLoginFailedGivenWrongPassword() throws Exception {
-        createConsultant();
+        dataHelper.createConsultant(MOBILE, PASSWORD);
 
         AuthRequest authRequest = new AuthRequest(MOBILE, "wrong password");
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
@@ -93,7 +97,7 @@ public class AuthControllerTest extends ControllerTestBase {
 
     @Test
     public void shouldRegisterConsultantFailedGivenMobileExists() throws Exception {
-        createConsultant(MOBILE, PASSWORD);
+        dataHelper.createConsultant(MOBILE, PASSWORD);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setMobile(MOBILE);
@@ -105,13 +109,5 @@ public class AuthControllerTest extends ControllerTestBase {
         assertThat(error.getStatusCode(), is(OK));
         assertThat(error.getBody().getCode(), is(REGISTER_FAILED));
         assertThat(error.getBody().getMessage(), is("consultant already registered."));
-    }
-
-    private void createConsultant() throws NoSuchAlgorithmException {
-        createConsultant(MOBILE, PASSWORD);
-    }
-
-    private void createConsultant(String mobile, String password) {
-        consultantDAO.create(mobile, SecurityHelper.hash(password));
     }
 }
