@@ -53,9 +53,6 @@ public class AuthController {
         if (StringUtils.isEmpty(mobile)) {
             throw new BadParametersException("Mobile can not be empty.");
         }
-        if (!StringUtils.isNumeric(mobile)) {
-            throw new BadParametersException("Mobile number is invalid.");
-        }
         if (StringUtils.isEmpty(passwordInPlaintext)) {
             throw new BadParametersException("Password can not be empty.");
         }

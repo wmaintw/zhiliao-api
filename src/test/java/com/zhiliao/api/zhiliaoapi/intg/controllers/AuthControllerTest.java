@@ -1,8 +1,8 @@
 package com.zhiliao.api.zhiliaoapi.intg.controllers;
 
-import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
 import com.zhiliao.api.zhiliaoapi.dao.ConsultantDAO;
 import com.zhiliao.api.zhiliaoapi.httpObjects.*;
+import com.zhiliao.api.zhiliaoapi.intg.common.ControllerTestBase;
 import com.zhiliao.api.zhiliaoapi.intg.common.TestDataHelper;
 import com.zhiliao.api.zhiliaoapi.models.Consultant;
 import com.zhiliao.api.zhiliaoapi.utils.SecurityHelper;
@@ -11,14 +11,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
-import static com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode.LOGIN_FAILED;
-import static com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode.REGISTER_FAILED;
+import static com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 public class AuthControllerTest extends ControllerTestBase {
     @Autowired
@@ -60,9 +58,21 @@ public class AuthControllerTest extends ControllerTestBase {
         AuthRequest authRequest = new AuthRequest("99988887777", PASSWORD);
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
 
-        assertThat(error.getStatusCode(), is(OK));
+        assertThat(error.getStatusCode(), is(FORBIDDEN));
         assertThat(error.getBody().getCode(), is(LOGIN_FAILED));
         assertThat(error.getBody().getMessage(), is("Invalid credential."));
+    }
+
+    @Test
+    public void shouldReturnOKStatusEvenLoginFailedGivenInvalidParam() throws Exception {
+        dataHelper.createConsultant(MOBILE, PASSWORD);
+
+        AuthRequest authRequest = new AuthRequest("", PASSWORD);
+        ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
+
+        assertThat(error.getStatusCode(), is(BAD_REQUEST));
+        assertThat(error.getBody().getCode(), is(BAD_REQUEST_OR_PARAM));
+        assertThat(error.getBody().getMessage(), is("Mobile can not be empty."));
     }
 
     @Test
@@ -72,7 +82,7 @@ public class AuthControllerTest extends ControllerTestBase {
         AuthRequest authRequest = new AuthRequest(MOBILE, "wrong password");
         ResponseEntity<CustomizedError> error = restTemplate.postForEntity(AUTH_URL, authRequest, CustomizedError.class);
 
-        assertThat(error.getStatusCode(), is(OK));
+        assertThat(error.getStatusCode(), is(FORBIDDEN));
         assertThat(error.getBody().getCode(), is(LOGIN_FAILED));
         assertThat(error.getBody().getMessage(), is("Invalid credential."));
     }

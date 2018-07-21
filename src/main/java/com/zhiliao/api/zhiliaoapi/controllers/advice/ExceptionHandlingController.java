@@ -1,11 +1,7 @@
 package com.zhiliao.api.zhiliaoapi.controllers.advice;
 
-import com.zhiliao.api.zhiliaoapi.exceptions.LoginFailedException;
-import com.zhiliao.api.zhiliaoapi.exceptions.RecordNotFoundException;
-import com.zhiliao.api.zhiliaoapi.exceptions.RegisterFailedException;
-import com.zhiliao.api.zhiliaoapi.exceptions.ServerErrorException;
+import com.zhiliao.api.zhiliaoapi.exceptions.*;
 import com.zhiliao.api.zhiliaoapi.httpObjects.CustomizedError;
-import com.zhiliao.api.zhiliaoapi.utils.CustomizedErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -23,6 +19,12 @@ public class ExceptionHandlingController {
         return new CustomizedError(SEVER_SIDE_ERROR, "An error happened.");
     }
 
+    @ExceptionHandler(BadParametersException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomizedError onBadRequestOrParam(HttpServletRequest request, Throwable ex) {
+        return new CustomizedError(BAD_REQUEST_OR_PARAM, ex.getMessage());
+    }
+
     @ExceptionHandler(RegisterFailedException.class)
     @ResponseStatus(HttpStatus.OK)
     public CustomizedError onRegisterFailed(HttpServletRequest request, Throwable ex) {
@@ -30,7 +32,7 @@ public class ExceptionHandlingController {
     }
 
     @ExceptionHandler(LoginFailedException.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public CustomizedError onLoginFailed(HttpServletRequest request, Throwable ex) {
         return new CustomizedError(LOGIN_FAILED, ex.getMessage());
     }

@@ -21,11 +21,4 @@ public class AuthControllerTest {
         AuthRequest authRequest = new AuthRequest("any mobile", EMPTY);
         authController.login(authRequest);
     }
-
-    @Test(expected = BadParametersException.class)
-    public void loginProcessShouldThrowExceptionGivenInvalidMobileIsSubmitted() throws Exception {
-        AuthController authController = new AuthController();
-        AuthRequest authRequest = new AuthRequest("kjlenf", "any password");
-        authController.login(authRequest);
-    }
 }
